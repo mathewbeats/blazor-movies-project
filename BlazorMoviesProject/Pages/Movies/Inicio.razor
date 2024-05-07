@@ -1,0 +1,120 @@
+﻿@* @page "/Inicio"
+
+@using BlazorMoviesProject.Models
+@using BlazorMoviesProject.Services.IServices
+@inject IMovieService MovieService
+<PageTitle>Home</PageTitle>
+
+
+<!-- Carrusel para posts destacados -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < Postss.Count(); i++)
+        {
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+        @foreach (var post in Postss)
+        {
+            <div class="carousel-item @(post == Postss.First() ? "active" : "")">
+                <img src="@post.PosterPath" class="d-block w-100" alt="@post.Title">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>@post.Title</h5>
+                    <p>@post.Overview</p>
+                </div>
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
+
+
+<style>
+    /* Estilos para el carrusel */
+    .carousel-item img {
+        height: 400px; /* Ajusta esta altura según tus necesidades */
+        object-fit: cover;
+    }
+
+    .carousel-caption {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    /* Estilos para las tarjetas de los posts */
+    .card {
+        transition: transform .3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+</style>
+
+
+
+
+<div class="my-1 container-fluid px-5">
+    <h1>Blazor Render Modes</h1>
+
+    <div class="row mt-3 border shadow">
+        <h2>Blazor WASM</h2>
+        <div class="col-6">
+            <h4><a href="/movies/">Movies (WASM)</a></h4>
+            <div>
+                <code>@("@rendermode RenderMode.InteractiveWebAssembly")</code>
+            </div>
+            <p>
+                This page uses interactive Blazor components in Web Assembly. This page will be pre-rendered on the
+                server, but it runs interactively on the client in WASM.
+            </p>
+            <p>
+                In this case, the "More Info" button will fetch the details of that movie and display it in a modal,
+                just like the SignalR component. However, since this is running on the client, there is a minimal API
+                mapped in the server's Program.cs. The WASM component sends a request to our server, which in turn uses
+                the server's API key to send a request to TMDB's API.
+            </p>
+            <p>
+                The WASM component is also able to use JavaScript to manipulate the DOM, just like the SSR and SignalR,
+                using JSInterop. The WASM component's code is sent to the client, so a malicious user could potentially
+                see and modify the code it contains.
+            </p>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+ 
+@code{
+
+
+    private IEnumerable<MovieDetails> Postss = new List<MovieDetails>();
+
+
+
+    private Models.MovieDetails modalRef { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Postss = await MovieService.GetMovies();
+    }
+
+
+
+} *@

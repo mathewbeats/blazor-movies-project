@@ -1,0 +1,269 @@
+﻿@page "/Home"
+
+@using BlazorMoviesProject.Models
+@using BlazorMoviesProject.Services.IServices
+@inject IMovieService MovieService
+<PageTitle>Home</PageTitle>
+
+
+<!-- Carrusel para posts destacados -->
+@* <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < Postss.Count(); i++)
+        {
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+        @foreach (var post in Postss)
+        {
+            <div class="carousel-item @(post == Postss.First() ? "active" : "")">
+                <img src="@post.PosterPath" class="d-block w-100" alt="@post.Title">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>@post.Title</h5>
+                    <p>@post.Overview</p>
+                </div>
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div> *@
+
+
+<!-- Carousel for featured posts -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < Postss.Count(); i++)
+        {
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+        @foreach (var post in Postss)
+        {
+            <div class="carousel-item @(post == Postss.First() ? "active" : "")">
+                <img src="@post.PosterPath" class="d-block w-100" alt="@post.Title">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>@post.Title</h5>
+                    <p>@post.Overview</p>
+                </div>
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Styles for the overall page and components -->
+<style>
+    /* body, html {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        } */
+    .content-container {
+        max-width: 1200px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Keep the original .container class for general use */
+    .container {
+        padding: 10px; /* Lighter default padding */
+    }
+
+    h1, h2, h3, h4, h5 {
+        color: #333;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .border-shadow {
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        background: white;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    .bone-background {
+        background-color: #F8F8F8; /* Light bone color, adjust if needed */
+    }
+
+    .carousel-item img {
+        height: 90vh; /* Altura fija para todas las imágenes */
+        width: 100%; /* Ancho completo para llenar el carrusel */
+        object-fit: contain; /* Asegura que toda la imagen se vea, puede dejar barras si la relación de aspecto no coincide */
+        transition: transform 1.5s ease-in-out; /* Suave transición para el efecto de zoom */
+        transform-origin: center center; /* El zoom se centra en el medio de la imagen */
+        transform: scale(1); /* Comienza con la imagen a tamaño completo */
+    }
+
+    .carousel-item.active img {
+        transform: scale(1.1); /* Aumenta la escala cuando el ítem es activo para hacer el efecto de acercamiento */
+    }
+
+    .carousel-caption {
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro para el texto para mejor lectura */
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.5rem;
+    }
+</style>
+
+
+
+@* <style>
+    .carousel-item img {
+        height: 90vh; /* Altura fija para todas las imágenes */
+        width: 100%; /* Ancho completo para llenar el carrusel */
+        object-fit: contain; /* Asegura que toda la imagen se vea, puede dejar barras si la relación de aspecto no coincide */
+        transition: transform 1.5s ease-in-out; /* Suave transición para el efecto de zoom */
+        transform-origin: center center; /* El zoom se centra en el medio de la imagen */
+        transform: scale(1); /* Comienza con la imagen a tamaño completo */
+    }
+
+    .carousel-item.active img {
+        transform: scale(1.1); /* Aumenta la escala cuando el ítem es activo para hacer el efecto de acercamiento */
+    }
+
+    .carousel-caption {
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro para el texto para mejor lectura */
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.5rem;
+    }
+</style>
+ *@
+
+
+
+
+<!-- Content Section -->
+<div class="content-container text-center bone-background">
+    <h1>Blazor Render Modes</h1>
+    <div class="border-shadow">
+        <h2>Introduction</h2>
+        <p>
+            Developed for Harvard University's CS50 course, this web application utilizes Blazor WebAssembly to create a dynamic, interactive movie listing platform. By integrating a client-side Blazor application with an ASP.NET Core API and SQL Server database, the system provides efficient real-time data handling and interactivity without server reloads, encapsulating modern full-stack development techniques.
+        </p>
+
+        <h2>Functional Overview</h2>
+        <h5>Interactive User Experience</h5>
+        <p>
+            The application acts as a virtual cinema billboard, allowing users to interact with a rich set of features depending on their authentication status:
+        </p>
+        <ul>
+            <li><strong>Authenticated Users:</strong> Registered users can create, update, and delete movie listings, mimicking administrative rights within the platform.</li>
+            <li><strong>Unauthenticated Users:</strong> Guests can browse the available movie database and view detailed descriptions and statistics, offering a typical user experience found in commercial movie platforms.</li>
+        </ul>
+
+        <h2>Technical Details</h2>
+        <h5>Architecture and Data Flow</h5>
+        <p>
+            The frontend is engineered using Blazor WebAssembly, enabling the webpage to be pre-rendered on the server for quicker initial load times and subsequently run interactively on the client's browser. This setup reduces latency and optimizes server load handling.
+        </p>
+        <p>
+            Interactions such as retrieving detailed movie information are managed via "More Info" buttons, utilizing minimal APIs configured in the server's <code>Program.cs</code>. These interactions ensure secure communications with backend services via API keys.
+        </p>
+
+        <h2>Security and Interactivity</h2>
+        <h5>Client-Side Enhancements</h5>
+        <p>
+            Utilizing JavaScript Interoperability (JSInterop), the application can perform complex DOM manipulations on the client-side, enhancing user interaction capabilities. This powerful feature also necessitates robust security strategies to safeguard against unauthorized code modifications by malicious users.
+        </p>
+
+        <h2>Academic and Developmental Context</h2>
+        <h5>Educational Achievements</h5>
+        <p>
+            This project not only showcases the practical application of cutting-edge web development technologies but also aligns with the educational objectives of the CS50 course at Harvard University. It integrates critical aspects of client-side processing, server-side data management, and robust user authentication, providing me, <strong>Alejandro Mateo García-Gil</strong>, with a profound experience in full-stack development.
+        </p>
+
+    </div>
+</div>
+
+
+
+
+@*
+<div class="my-1 container-fluid px-5 text-center">
+    <h1 class="text-center">Blazor Render Modes</h1>
+
+    <div class="row mt-3 border shadow justify-content-center">
+        <div class="col-6 text-ceter">
+            <h2>Blazor WASM</h2>
+            <h4><a href="/movies/">Movies (WASM)</a></h4>
+            <div>
+                <code>@("@rendermode RenderMode.InteractiveWebAssembly")</code>
+            </div>
+            <p>
+                This page uses interactive Blazor components in Web Assembly. This page will be pre-rendered on the
+                server, but it runs interactively on the client in WASM.
+            </p>
+            <p>
+                In this case, the "More Info" button will fetch the details of that movie and display it in a modal,
+                just like the SignalR component. However, since this is running on the client, there is a minimal API
+                mapped in the server's Program.cs. The WASM component sends a request to our server, which in turn uses
+                the server's API key to send a request to TMDB's API.
+            </p>
+            <p>
+                The WASM component is also able to use JavaScript to manipulate the DOM, just like the SSR and SignalR,
+                using JSInterop. The WASM component's code is sent to the client, so a malicious user could potentially
+                see and modify the code it contains.
+            </p>
+        </div>
+    </div>
+</div>
+ *@
+
+
+
+@code {
+
+
+    private IEnumerable<MovieDetails> Postss = new List<MovieDetails>();
+
+
+
+    private Models.MovieDetails modalRef { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Postss = await MovieService.GetMovies();
+    }
+
+
+
+}

@@ -1,0 +1,161 @@
+﻿@inject IServicioAutenticacion AuthService
+@inject NavigationManager NavigationManager
+
+@*
+﻿<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="/Imagenes/BlazorMovieOrg.png" height="50" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @* <li class="nav-item">
+                    <NavLink class="nav-link" href="Home" Match="NavLinkMatch.All">Home</NavLink>
+                </li>
+                 <li class="nav-item">
+                    <NavLink class="nav-link" href="movies" Match="NavLinkMatch.All">Movies</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="create-movie" Match="NavLinkMatch.All">Create Movie</NavLink>
+                </li>
+               @*  <li class="nav-item">
+                    <NavLink class="nav-link" href="/movies/wasm" Match="NavLinkMatch.All">Movies (WASM)</NavLink>
+                </li>
+               <li class="nav-item">
+                    <NavLink class="nav-link" href="moviedetails" Match="NavLinkMatch.All">Movie Details</NavLink>
+                </li>
+                <li class="nav-item p-0">
+                    <NavLink class="nav-link text-white" href="registrarse">
+                        <span class="p-2">
+                            Registrarse
+                        </span>
+                    </NavLink>
+                </li>
+                <li class="nav-item p=0">
+                    <NavLink class="nav-link text-white" href="acceder">
+                        <span class="p-2">
+                            Login
+                        </span>
+                    </NavLink>
+                </li>
+                <li class="nav-item p-0">
+                    <NavLink class="nav-link text-white">
+                        <span class="p-2">
+                            Bienvenido
+                        </span>
+                    </NavLink>
+                </li>
+                <li class="nav-item p-0">
+                    <NavLink Class="nav-link text-white" href="salir">
+                        <span class="p-2">
+                            Salir
+                        </span>
+                    </NavLink>
+                </li>
+            </ul>
+
+
+        </div>
+    </div>
+</nav> *@
+
+
+
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <NavLink class="nav-link text-white" href="/home" Match="NavLinkMatch.All">
+                    <span class="p-2">Welcome to the Movies!</span>
+                </NavLink>
+
+                <!-- Siempre visible -->
+                <NavLink class="nav-link text-white" href="/moviedetails">
+                    <span class="p-2">Movies Available</span>
+                </NavLink>
+
+                <!-- Solo visible para usuarios autenticados -->
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="nav-link text-white" href="/create-movie">
+                            <span class="p-2">Create New Movie</span>
+                        </NavLink>
+
+                        <NavLink class="nav-link text-white" href="/Movies">
+                            <span class="p-2">Movie Details</span>
+                        </NavLink>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item p-0">
+                            <NavLink class="nav-link text-white">
+                                <span class="p-2">
+                                    Welcome
+                                </span>
+                            </NavLink>
+                        </li>
+                        @*   <li class="nav-item p-0">
+                        <NavLink class="nav-link text-white" href="/salir">
+                        <span class="p-2">
+                        Salir
+                        </span>
+                        </NavLink>
+
+                        </li> *@
+
+                        
+
+                        <li class="nav-item p-0">
+                            <NavLink class="nav-link text-white">
+                                <span class="p-2">
+                                    <button class="btn btn-link nav-link text-white" @onclick="Logout">Log Out</button>
+                                </span>
+                            </NavLink>
+                        </li>
+
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item p-0">
+                            <NavLink class="nav-link text-white" href="/registrarse">
+                                <span class="p-2">
+                                    Register
+                                </span>
+                            </NavLink>
+                        </li>
+                        <li class="nav-item p-0">
+                            <NavLink class="nav-link text-white" href="/acceder">
+                                <span class="p-2">
+                                    Log In
+                                </span>
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+@code {
+    private async Task Logout()
+    {
+        await AuthService.Salir();
+        NavigationManager.NavigateTo("/Home", forceLoad: true);
+    }
+}

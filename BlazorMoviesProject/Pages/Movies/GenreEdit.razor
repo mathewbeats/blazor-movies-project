@@ -1,0 +1,31 @@
+﻿@page "/genre"
+@using BlazorMoviesProject.Models
+@using BlazorMoviesProject.Services.IServices
+@inject IMovieService GenreService
+
+<div class="form-group">
+    <label for="genre">Género:</label>
+    <InputSelect @bind-Value="Genre.Id" class="form-control" id="genre">
+        <option value="">Seleccione un género...</option>
+        @foreach (var g in availableGenres)
+        {
+            <option value="@g.Id">@g.Name</option>
+        }
+    </InputSelect>
+</div>
+
+@code {
+    [Parameter] public Genre Genre { get; set; }
+    private List<Genre> availableGenres;
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableGenres = await GenreService.GetAvailableGenres(); // Cargar los géneros desde el servicio
+        Console.WriteLine("Número de géneros cargados: " + availableGenres.Count);
+        foreach (var genre in availableGenres)
+        {
+            Console.WriteLine("Género: " + genre.Name);
+        }
+    }
+}
+

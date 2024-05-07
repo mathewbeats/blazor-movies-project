@@ -1,0 +1,7 @@
+# Ignorar la carpeta de configuraciones del Visual Studio
+.vs/
+# Ignorar archivos de compilación
+bin/
+obj/
+# Otros archivos que pueden contener información sensible o son específicos del entorno
+appsettings.json

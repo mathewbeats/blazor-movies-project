@@ -1,0 +1,172 @@
+﻿@page "/update-movie2/{Id:int}"
+@using BlazorMoviesProject.Services.IServices
+@using BlazorMoviesProject.Models
+@inject IMovieService movieService
+@inject NavigationManager navigationManager
+
+
+<h1 class="text-center">Actualizar Detalles de la Película</h1>
+
+<EditForm Model="EditMovie" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Título:</label>
+        <InputText @bind-Value="EditMovie.Title" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Descripción:</label>
+        <InputTextArea @bind-Value="EditMovie.Overview" class="form-control" rows="5" />
+    </div>
+
+
+    <div class="form-group">
+        <label>Lenguaje Original:</label>
+        <InputText @bind-Value="EditMovie.OriginalLanguage" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Título Original:</label>
+        <InputText @bind-Value="EditMovie.OriginalTitle" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Camino de Fondo (Backdrop Path):</label>
+        <InputText @bind-Value="EditMovie.BackdropPath" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Camino de Fondo (Poster Path):</label>
+        <InputText @bind-Value="EditMovie.PosterPath" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Página de Inicio (Homepage):</label>
+        <InputText @bind-Value="EditMovie.Homepage" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>ID de IMDB:</label>
+        <InputText @bind-Value="EditMovie.ImdbId" class="form-control" />
+    </div>
+
+
+
+    <div class="form-group">
+        <label>Fecha de LanzamientoBuena:</label>
+        <InputText @bind-Value="EditMovie.ReleaseDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Presupuesto ($):</label>
+        <InputNumber @bind-Value="EditMovie.Budget" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Popularidad:</label>
+        <InputNumber @bind-Value="EditMovie.Popularity" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Ingresos ($):</label>
+        <InputNumber @bind-Value="EditMovie.Revenue" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Duración (minutos):</label>
+        <InputNumber @bind-Value="EditMovie.Runtime" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Promedio de Votos:</label>
+        <InputNumber @bind-Value="EditMovie.VoteAverage" step="0.1" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Conteo de Votos:</label>
+        <InputNumber @bind-Value="EditMovie.VoteCount" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Tag Line:</label>
+        <InputText @bind-Value="EditMovie.Tagline" class="form-control" />
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="form-group">
+        <label>¿Para Adultos?:</label>
+        <InputCheckbox @bind-Value="EditMovie.Adult" />
+    </div>
+
+    <div class="form-group">
+        <label>¿Video Disponible?:</label>
+        <InputCheckbox @bind-Value="EditMovie.Video" />
+    </div>
+
+    <div class="form-group">
+        <label>Estado:</label>
+        <InputText @bind-Value="EditMovie.Status" class="form-control" />
+    </div>
+
+
+
+    <div class="form-group">
+        <label for="genreSelect">Género:</label>
+        <InputSelect id="genreSelect" @bind-Value="selectedGenreId" class="form-control">
+            <option value="">Seleccione un género...</option>
+            @foreach (var genre in availableGenres)
+            {
+                <option value="@genre.Id">@genre.Name</option>
+                // Corregido para eliminar .ToString(), no necesario
+            }
+        </InputSelect>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Película</button>
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private MovieDetails EditMovie { get; set; } = new MovieDetails();
+
+    public int? selectedGenreId { get; set; }
+    public List<Genre> availableGenres { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EditMovie = await movieService.GetMovieById(Id);
+        availableGenres = await movieService.GetAvailableGenres();
+
+        // Asignar el género seleccionado basado en el primero disponible, si existe
+        if (EditMovie.Genres.Any())
+        {
+            selectedGenreId = EditMovie.Genres.First().Id;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Asegurarte de actualizar los géneros antes de enviar la actualización
+        if (selectedGenreId.HasValue)
+        {
+            EditMovie.Genres.Clear(); // Limpia la lista actual
+            Genre selectedGenre = availableGenres.FirstOrDefault(g => g.Id == selectedGenreId.Value);
+            if (selectedGenre != null)
+            {
+                //EditMovie.Genres.Add(selectedGenre);
+            }
+        }
+
+        var updated = await movieService.UpdateMovie(Id, EditMovie);
+     
+    }
+
+    // // Asegúrate de que esta función se necesite y se utilice correctamente
+    // private void AddNewGenre()
+    // {
+    //     var newGenre = new Genre(); // Debería crear una instancia aquí si es necesario
+    //     EditMovie.Genres.Add(newGenre);
+    // }
+}

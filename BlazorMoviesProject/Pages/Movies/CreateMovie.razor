@@ -1,0 +1,138 @@
+﻿@page "/create-movie"
+@using BlazorMoviesProject.Services.IServices
+@using BlazorMoviesProject.Models
+@inject IMovieService movieService
+@inject NavigationManager navigationManager
+
+<h1 class="text-center">Create New Movie</h1>
+
+<EditForm Model="EditMovie" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Title:</label>
+        <InputText @bind-Value="EditMovie.Title" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Overview:</label>
+        <InputTextArea @bind-Value="EditMovie.Overview" class="form-control" rows="5" />
+    </div>
+
+
+    <div class="form-group">
+        <label>Original Language:</label>
+        <InputText @bind-Value="EditMovie.OriginalLanguage" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Original Title:</label>
+        <InputText @bind-Value="EditMovie.OriginalTitle" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Backdrop Path:</label>
+        <InputText @bind-Value="EditMovie.BackdropPath" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Poster Path:</label>
+        <InputText @bind-Value="EditMovie.PosterPath" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Home Page:</label>
+        <InputText @bind-Value="EditMovie.Homepage" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Imdb Id:</label>
+        <InputText @bind-Value="EditMovie.ImdbId" class="form-control" />
+    </div>
+
+
+    <div class="form-group">
+        <label>Release Date:</label>
+        <InputText @bind-Value="EditMovie.ReleaseDate" class="form-control" />
+    </div>
+
+
+    <div class="form-group">
+        <label>Budget ($):</label>
+        <InputNumber @bind-Value="EditMovie.Budget" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Popularity:</label>
+        <InputNumber @bind-Value="EditMovie.Popularity" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Revenue ($):</label>
+        <InputNumber @bind-Value="EditMovie.Revenue" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Runtime (minutes):</label>
+        <InputNumber @bind-Value="EditMovie.Runtime" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Vote Average:</label>
+        <InputNumber @bind-Value="EditMovie.VoteAverage" step="0.1" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Vote Count:</label>
+        <InputNumber @bind-Value="EditMovie.VoteCount" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Tag Line:</label>
+        <InputText @bind-Value="EditMovie.Tagline" class="form-control" />
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="form-group">
+        <label>Adult Movie?:</label>
+        <InputCheckbox @bind-Value="EditMovie.Adult" />
+    </div>
+
+    <div class="form-group">
+        <label>Video:</label>
+        <InputCheckbox @bind-Value="EditMovie.Video" />
+    </div>
+
+    <div class="form-group">
+        <label>Status:</label>
+        <InputText @bind-Value="EditMovie.Status" class="form-control" />
+    </div>
+
+  
+
+    <!-- Botón de envío -->
+    <button type="submit" class="btn btn-success">Create Movie</button>
+</EditForm>
+
+@code {
+    private MovieDetails EditMovie { get; set; } = new MovieDetails();
+    private bool isProcessing = false;
+
+    private async Task HandleValidSubmit()
+    {
+        isProcessing = true;
+        var result = await movieService.CreateMovie(EditMovie);
+        isProcessing = false;
+        if (result != null)
+        {
+            navigationManager.NavigateTo("/movies");
+        }
+        else
+        {
+            // Mostrar algún mensaje de error
+            Console.WriteLine("Error trying to create the movie. Please try again.");
+
+        }
+    }
+}

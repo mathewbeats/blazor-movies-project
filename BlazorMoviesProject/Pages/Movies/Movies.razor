@@ -1,0 +1,129 @@
+﻿@page "/movies"
+@using BlazorMoviesProject.Models
+@using BlazorMoviesProject.Services.IServices
+@using Microsoft.AspNetCore.Authorization
+@inject IMovieService MovieService
+@inject IJSRuntime JSRuntime
+@attribute [Authorize]
+
+
+<h1 class="text-center">Movies</h1>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-7">
+                <h4 class="cardcard-title">Movie List</h4>
+            </div>
+            <div class="col-7">
+                <div class="col-3 offset-2">
+                    <NavLink href="create-movie" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i>&nbsp; Create New Movie</NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Original Title</th>
+                    <th>Overview</th>
+                    <th>Release Date</th>
+                    <th>Budget for the movie</th>
+                    <th>Status</th>
+                    <th>Movie Poster</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (MovieDetails.Count() > 0)
+                {
+                    @foreach (var movie in MovieDetails)
+                    {
+                        <tr>
+
+                            <td>@movie.Id</td>
+                            <td>@movie.Title</td>
+                            <td>@movie.OriginalTitle</td>
+                            <td>@movie.Overview</td>
+                            <td>@DateTime.Parse(movie.ReleaseDate).ToString("MMM dd yyy")</td>
+                            <td>@movie.Budget.ToString("#,##0,,M")</td>
+                            <td>@movie.Status</td>
+                            <td><img src="@movie.PosterPath" class="img-fluid" width="100px" /></td>
+                            <td>
+                                <NavLink href="@($"update-movie/{movie.Id}")" class="btn btn-success"><i class="bi bi-gear-fill"></i>&nbsp; Update</NavLink>
+
+
+
+                                <button class="btn btn-danger" @onclick="() => ManejadorOnBorrar(movie.Id)"><i class="bi bi-trash-fill"></i>&nbsp; Delete</button>
+                            </td>
+
+
+                        </tr>
+
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">Loading...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<ConfirmacionBorrado ProcesandoComponentePadre="estaProcesando" CambioConfirmacion="Click_Confirmacion_Borrado"></ConfirmacionBorrado>
+
+
+
+@code {
+
+    public IEnumerable<MovieDetails> MovieDetails = new List<MovieDetails>();
+
+    private bool estaProcesando { get; set; } = false;
+
+    private int? BorrarIdMovie { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        MovieDetails = await MovieService.GetMovies();
+    }
+
+
+    public async Task ManejadorOnBorrar(int movieId)
+    {
+        BorrarIdMovie = movieId;
+        await JSRuntime.InvokeVoidAsync("MostrarModalConfirmacionBorrado");
+    }
+
+    
+
+
+    public async Task Click_Confirmacion_Borrado(bool confirmado)
+    {
+        estaProcesando = true;
+
+        if (confirmado && BorrarIdMovie != null)
+        {
+            // MovieDetails Movies = await MovieService.DeleteMovie(BorrarIdPost.Value);
+
+            await MovieService.DeleteMovie(BorrarIdMovie.Value);
+            await JSRuntime.ToastrSuccess("Movie deleted successfully.");
+
+            MovieDetails = await MovieService.GetMovies();
+        }
+
+        await JSRuntime.InvokeVoidAsync("OcultarModalConfirmacionBorrado");
+        estaProcesando = false;
+
+    }
+
+
+
+
+
+}

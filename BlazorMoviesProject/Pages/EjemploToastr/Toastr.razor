@@ -1,0 +1,40 @@
+﻿@page "/toastr"
+@using BlazorMoviesProject.Models
+@using BlazorMoviesProject.Services.IServices
+@inject IJSRuntime JsRuntime
+@inject IMovieService MovieService
+
+<PageTitle>Toastr</PageTitle>
+
+<h1 class="Demos Toastr Practica">Toastr Ejemplo</h1>
+
+<div class="row mt-4">
+    <div class="col-4">
+        <button class="btn btn-success" @onclick="DemoSuccess">Demo Toastr Success</button>
+        <button class="btn btn-danger" @onclick="DemoError">Demo Toastr Error</button>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    //metodo para el toastr java
+
+    private async Task DemoSuccess()
+    {
+        // await JsRuntime.InvokeVoidAsync("Show Toastr", "Success", "Tarea completada con exito", "success");
+
+        await JsRuntime.ToastrSuccess("Tarea Completada");
+    }
+
+    private async Task DemoError()
+    {
+        await JsRuntime.ToastrError("Error, Tarea NO COMPLETADA!");
+    }
+
+
+
+
+}
