@@ -26,6 +26,41 @@ After setting up the project, you can:
 - **Browse Movies**: All users can browse the existing movie listings.
 - **Manage Movies**: Logged-in users can add, edit, or delete movies.
 
+## Database Setup
+
+To set up the database for the Blazor Movies Project, follow these steps:
+
+### Prerequisites
+Ensure you have SQL Server Management Studio (SSMS) installed on your machine. If not, you can download it from [SQL Server Management Studio (SSMS)](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms).
+
+### Steps to Create Database
+1. **Navigate to the DatabaseScripts Folder**:
+   - Open your project in Visual Studio.
+   - Navigate to the `DatabaseScripts` folder.
+
+2. **Open SQL Server Management Studio (SSMS)**:
+   - Launch SQL Server Management Studio.
+   - Connect to your SQL Server instance.
+
+3. **Execute the Scripts**:
+   - In SSMS, open a new query window.
+   - Drag and drop the SQL script file from the `DatabaseScripts` folder into the query window or use the `File -> Open -> File...` option to navigate and open the script file.
+   - Execute the script by pressing `F5` or clicking on the `Execute` button.
+
+### Configure Connection String
+Once the database is created, update the connection strings in the `appsettings.json` file of your ASP.NET Core project to match your SQL Server instance details. This ensures that your application can connect to the newly created database.
+
+### Verify Database Creation
+After running the scripts, use SSMS to browse to the SQL Server instance and check if the database and its tables are created correctly and populated with initial data as expected.
+
+### Troubleshooting
+If you encounter any issues during the database setup, review the SQL script for any errors and ensure your SQL Server instance is configured to allow script executions. Check for any permission issues that might prevent scripts from running.
+
+## Additional Information
+- If modifications are needed based on your environment (e.g., changing database names, schema details), adjust the scripts accordingly before executing.
+- Regularly backup your database once changes are made to ensure data safety.
+
+
 ## Credits
 This project uses the following open-source packages:
 - Blazor WebAssembly
